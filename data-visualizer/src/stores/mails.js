@@ -5,7 +5,6 @@ export const useEmailsStore = defineStore('email', {
   state: () => {
     return {
       emails: [],
-      filter: null,
       error: null,
       selectedEmail: null,
       isLoading: false,

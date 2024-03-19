@@ -43,10 +43,10 @@ const setSelectedEmail = (email) => {
                                     {{ email.Subject.slice(0, maxLength) }}
                                 </td>
                                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                    {{ email.From.slice(0, maxLength) }}
+                                    {{ email.From.slice(0, 20) }}
                                 </td>
                                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                    {{ email.To.slice(0, maxLength) }}
+                                    {{ email.To.slice(0, 20) }}
                                 </td>
                             </tr>
                         </tbody>
@@ -56,3 +56,29 @@ const setSelectedEmail = (email) => {
         </div>
     </div>
 </template>
+
+<style scoped>
+/* Add some spacing and alignment */
+.container {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Style the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+}
+
+/* Add hover effect */
+tr:hover {
+    background-color: #f7fafc;
+    cursor: pointer;
+}
+</style>
