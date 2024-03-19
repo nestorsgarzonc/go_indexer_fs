@@ -34,6 +34,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 
 func fetchEmails(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.URL.Path != "/emails" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
@@ -70,7 +71,7 @@ func zincQuery(query string) ([]Source, error) {
     "query": { "term": ` + query + `, "field": "_all" },
     "sort_fields": ["-@timestamp"],
     "from": 0,
-    "max_results": 10,
+    "max_results": 20,
     "_source": []}`
 	}
 	r, err := http.NewRequest("POST", getUrl, bytes.NewBuffer([]byte(body)))
