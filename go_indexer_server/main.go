@@ -5,44 +5,38 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const ZINC_URL = "http://localhost:4080"
 
 func main() {
-	http.HandleFunc("/emails", fetchEmails)
-	http.HandleFunc("/hello", helloHandler)
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Recoverer)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hi"))
+	})
+	r.Route("/", func(r chi.Router) {
+		r.Get("/emails", fetchEmails)
+		r.Get("/hello", helloHandler)
+	})
 	fmt.Println("Starting server at port 8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
-	}
+	http.ListenAndServe(":8080", r)
 }
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/hello" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
 	fmt.Fprintf(w, "Hello!")
 }
 
 func fetchEmails(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	if r.URL.Path != "/emails" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
 	r.ParseForm()
 	query := r.Form.Get("query")
 	fmt.Println("Query: " + query)
